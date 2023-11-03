@@ -12,26 +12,35 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout 🏁
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: 16
+
       - name: Check current directory
         run: |
           echo "Current directory:"
           pwd
           echo "Directory content:"
           ls -la
+
       - name: Change to project dic
         run: cd /home/runner/work/Peer-Frontend/Peer-Frontend
+
       - name: Install packages
         run: npm i /home/runner/work/Peer-Frontend/Peer-Frontend
+
       - name: Prettier
         working-directory: /home/runner/work/Peer-Frontend/Peer-Frontend
         run: npm run format
+
       - name: Lint
         working-directory: /home/runner/work/Peer-Frontend/Peer-Frontend
         run: npm run lint
+
   CD:
     name: Deployment
     runs-on: ubuntu-latest
