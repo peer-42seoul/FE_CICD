@@ -11,30 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - name: Check current directory
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Directory content:"
-          ls -la
-      - name: Change to project dic
-        run: cd /home/runner/work/Peer-Frontend/Peer-Frontend
-      - name: Install packages
-        run: npm i /home/runner/work/Peer-Frontend/Peer-Frontend
-      - name: Prettier
-        working-directory: /home/runner/work/Peer-Frontend/Peer-Frontend
-        run: npm run format
-      - name: Lint
-        working-directory: /home/runner/work/Peer-Frontend/Peer-Frontend
-        run: npm run lint
-  CD:
-    name: Deployment
-    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout 🏁
         uses: actions/checkout@v2
@@ -44,16 +21,41 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install dependencies
-        run: npm install
+      - name: Check current directory
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Directory content:"
+          ls -la
 
-      - name: Build
-        run: npm run build
+      - name: Change to project dic
+        run: cd /home/runner/work/FE_CICD/FE_CICD
+
+      - name: Install packages
+        run: npm i /home/runner/work/FE_CICD/FE_CICD
+
+      - name: Prettier
+        working-directory: /home/runner/work/FE_CICD/FE_CICD
+        run: npm run format
+
+      - name: Lint
+        working-directory: /home/runner/work/FE_CICD/FE_CICD
+        run: npm run lint
+
+  CD:
+    name: Deployment
+    runs-on: ubuntu-latest
+    needs: CI
+    steps:
+      - name: Checkout 🏁
+        uses: actions/checkout@v2
 
       - name: Build and push Docker image
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE }} .
+          touch /home/runner/work/FE_CICD/FE_CICD/.env.production
+          echo "${{ secrets.ENV_FILE }}" >> /home/runner/work/FE_CICD/FE_CICD/.env.production
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin 
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE }} .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE }}
 
       - name: Deploy
@@ -66,6 +68,6 @@ jobs:
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE }}
             docker rm -f $(docker ps -qa)
-            docker run -d -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE }}
+            docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_DEV_IMAGE }}
             docker container prune -f
             docker image prune -f
