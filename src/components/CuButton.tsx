@@ -13,7 +13,7 @@ interface CuButtonProps {
   startIcon?: React.JSX.Element // 버튼 텍스트 앞에 들어갈 아이콘
   endIcon?: React.JSX.Element // 버튼 텍스트 뒤에 들어갈 아이콘
   fullWidth?: boolean // width: 100%
-  disabled?: boolean
+  disabled?: boolean // 버튼 비활성화
 }
 
 const CuButton = ({
