@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+
     steps:
       - name: Checkout 🏁
         uses: actions/checkout@v2
@@ -28,17 +29,17 @@ jobs:
           ls -la
 
       - name: Change to project dic
-        run: cd /home/runner/work/Peer-Frontend/Peer-Frontend
+        run: cd /home/runner/work/Peer-Frontend
 
       - name: Install packages
-        run: npm i /home/runner/work/Peer-Frontend/Peer-Frontend
+        run: npm i /home/runner/work/Peer-Frontend
 
       - name: Prettier
-        working-directory: /home/runner/work/Peer-Frontend/Peer-Frontend
+        working-directory: /home/runner/work/Peer-Frontend
         run: npm run format
 
       - name: Lint
-        working-directory: /home/runner/work/Peer-Frontend/Peer-Frontend
+        working-directory: /home/runner/work/Peer-Frontend
         run: npm run lint
 
   CD:
