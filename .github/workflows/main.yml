@@ -29,17 +29,17 @@ jobs:
           ls -la
 
       - name: Change to project dic
-        run: cd /home/runner/work/Peer-Frontend
+        run: cd /home/runner/work/FE_CICD/FE_CICD
 
       - name: Install packages
-        run: npm i /home/runner/work/Peer-Frontend
+        run: npm i /home/runner/work/FE_CICD/FE_CICD
 
       - name: Prettier
-        working-directory: /home/runner/work/Peer-Frontend
+        working-directory: /home/runner/work/FE_CICD/FE_CICD
         run: npm run format
 
       - name: Lint
-        working-directory: /home/runner/work/Peer-Frontend
+        working-directory: /home/runner/work/FE_CICD/FE_CICD
         run: npm run lint
 
   CD:
